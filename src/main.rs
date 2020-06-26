@@ -1,14 +1,21 @@
 use std::collections::HashMap;
+use std::env;
 
 use futures::{FutureExt, StreamExt};
 use warp::Filter;
+
+mod eth;
 
 #[tokio::main]
 async fn main() {
     pretty_env_logger::init();
 
+    let infura_endpoint = env::var("INFURA_ENDPOINT").expect("failed to get INFURA_ENDPOINT");
+    let res = eth::subscribe(&infura_endpoint).await;
+    println!("{:?}", res);
+
     // POST /login
-    let login = warp::path!("login")
+    let login = warp::path("login")
         .and(warp::post())
         .and(warp::body::content_length_limit(1024 * 16))
         .and(warp::body::form())

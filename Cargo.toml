@@ -11,3 +11,7 @@ futures = "0.3"
 pretty_env_logger = "0.4"
 tokio = { version = "0.2", features = ["macros"] }
 warp = "0.2"
+web3 = { git = "https://github.com/tomusdrw/rust-web3" }
+
+[patch.'https://github.com/tomusdrw/rust-web3']
+web3 = { git = "https://github.com/en/rust-web3", branch = "add-support-for-wss" }
