@@ -1,0 +1,13 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-f', 'Dockerfile', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME:latest', '-t', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/kubectl'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=asia-east1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+  args: ['set', 'image', 'deployment', 'etherwhales', 'etherwhales=gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
+timeout: 3600s
